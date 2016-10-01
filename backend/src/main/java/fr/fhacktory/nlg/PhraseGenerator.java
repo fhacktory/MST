@@ -4,10 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import simplenlg.framework.NLGFactory;
+import fr.fhacktory.model.Sentence;
+import simplenlg.framework.*;
 import simplenlg.lexicon.Lexicon;
-import simplenlg.phrasespec.SPhraseSpec;
-import simplenlg.realiser.english.Realiser;
+import simplenlg.lexicon.french.XMLLexicon;
+import simplenlg.realiser.*;
+import simplenlg.phrasespec.*;
 
 @RestController
 public class PhraseGenerator {
@@ -22,21 +24,22 @@ public class PhraseGenerator {
 	}
 
 	@RequestMapping("/sentenceGenerator")
-	public String generateSentence(@RequestParam(value = "subject", defaultValue = "Toto") String subject,
+	public Sentence generateSentence(@RequestParam(value = "subject", defaultValue = "Toto") String subject,
 			@RequestParam(value = "verb", defaultValue = "Manger") String verb,
 			@RequestParam(value = "complement", defaultValue = "pomme") String complement) {
-		SPhraseSpec p = nlgFactory.createClause();
-		p.setSubject(subject);
-		p.setVerb(verb);
-		p.setObject(complement);
-		return this.realiser.realiseSentence(p);
+		NPPhraseSpec theMan = nlgFactory.createNounPhrase(subject);
+		NPPhraseSpec theCrowd = nlgFactory.createNounPhrase("le", complement);
+		SPhraseSpec phrase = nlgFactory.createClause(theMan, verb, theCrowd);
+		Sentence sentence = new Sentence();
+		sentence.setSentence(this.realiser.realiseSentence(phrase));
+		return sentence;
 	}
 
 	public PhraseGenerator() {
 		super();
-		Lexicon lexicon = Lexicon.getDefaultLexicon();
+		Lexicon lexicon = new XMLLexicon();
 		this.nlgFactory = new NLGFactory(lexicon);
-		this.realiser = new Realiser(lexicon);
+		this.realiser = new Realiser();
 	}
 
 }
