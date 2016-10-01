@@ -3,6 +3,7 @@ package fr.fhacktory.nlg;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,18 +14,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.fhacktory.model.Sentence;
 import fr.fhacktory.model.StepForm;
 import fr.fhacktory.model.repository.SentenceRepository;
-import fr.fhacktory.model.Sentence;
-import lombok.extern.java.Log;
+import fr.fhacktory.utils.AdjectifsGenerator;
 import lombok.extern.slf4j.Slf4j;
 import simplenlg.features.Feature;
 import simplenlg.features.Tense;
-import simplenlg.framework.*;
+import simplenlg.framework.NLGFactory;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.lexicon.french.XMLLexicon;
-import simplenlg.realiser.*;
-import simplenlg.phrasespec.*;
+import simplenlg.phrasespec.NPPhraseSpec;
+import simplenlg.phrasespec.PPPhraseSpec;
+import simplenlg.phrasespec.SPhraseSpec;
+import simplenlg.realiser.Realiser;
 
 @RestController
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
@@ -34,7 +37,7 @@ public class PhraseGenerator {
 	private NLGFactory nlgFactory;
 	private Realiser realiser;
 	private static final String template = "Hello, %s!";
-	
+
 	@Autowired
 	SentenceRepository sentenceRepository;
 
@@ -49,11 +52,38 @@ public class PhraseGenerator {
 		log.debug(questionnaire.toString());
 		List<Sentence> sentenceList = new ArrayList<>();
 		try {
-			NPPhraseSpec sujet = nlgFactory.createNounPhrase(questionnaire.getSubject());
-			NPPhraseSpec complement = nlgFactory.createNounPhrase("le", questionnaire.getComplement());
-			NPPhraseSpec lieu = nlgFactory.createNounPhrase("le", questionnaire.getPlace());
+			NPPhraseSpec sujet;
+			if (StringUtils.isBlank(questionnaire.getSubject())) {
+				sujet = nlgFactory.createNounPhrase("Cédric");
 
-	
+			} else {
+				sujet = nlgFactory.createNounPhrase(questionnaire.getSubject());
+			}
+			NPPhraseSpec complement;
+			if (StringUtils.isBlank(questionnaire.getComplement())) {
+				complement = nlgFactory.createNounPhrase("un", "glace");
+
+			} else {
+				complement = nlgFactory.createNounPhrase("le", questionnaire.getComplement());
+			}
+			// Ajout d'un adjectif au complément
+			AdjectifsGenerator adjectifsGenerator = new AdjectifsGenerator();
+			String adjectif = adjectifsGenerator.getAnAdjectif();
+			complement.addModifier(adjectif);
+
+			NPPhraseSpec lieu;
+			if (StringUtils.isBlank(questionnaire.getPlace())) {
+				lieu = nlgFactory.createNounPhrase("le", "bateau");
+
+			} else {
+				lieu = nlgFactory.createNounPhrase("le", questionnaire.getPlace());
+			}
+			// Ajout d'un adjectif au complément
+			String adjectifLieu = adjectifsGenerator.getAnAdjectif();
+			complement.addModifier(adjectifLieu);
+
+			String verb = StringUtils.isBlank(questionnaire.getVerb()) ? "Manger" : questionnaire.getVerb();
+
 			// PPPhraseSpec complementDuNomMatiere =
 			// nlgFactory.createPrepositionPhrase("en", "pierre");
 			// lieu.addModifier(complementDuNomMatiere);
@@ -69,18 +99,16 @@ public class PhraseGenerator {
 			log.debug(sentence.getSentence());
 			sentence = sentenceRepository.save(sentence);
 			sentenceList.add(sentence);
-			
+
 			Sentence sentence2 = new Sentence();
-			 PPPhraseSpec complementDuNomCategorie =
-			 nlgFactory.createPrepositionPhrase("de", "campagne");
-			 lieu.addComplement(complementDuNomCategorie);
+			PPPhraseSpec complementDuNomCategorie = nlgFactory.createPrepositionPhrase("de", "campagne");
+			lieu.addComplement(complementDuNomCategorie);
 
 			sentence2.setSentence(this.realiser.realiseSentence(phrase));
 			log.debug(sentence2.getSentence());
 			sentence2 = sentenceRepository.save(sentence2);
 			sentenceList.add(sentence2);
-			
-			
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
