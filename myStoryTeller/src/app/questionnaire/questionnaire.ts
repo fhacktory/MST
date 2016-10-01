@@ -1,4 +1,4 @@
 export class Questionnaire {
 
-  constructor(private subject: string, private verb: string, private complement: string) { }
+  constructor(public subject: string, public verb: string, public complement: string, public place: string) { }
 }

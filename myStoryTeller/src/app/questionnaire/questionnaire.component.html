@@ -1,5 +1,5 @@
 <div>
-  <form>
+  <form (ngSubmit)="generate()">
 <div>
   <label for="subject">Sujet</label>
   <input type="text" class="form-control" id="subject" required [(ngModel)]="model.subject" name="subject">
@@ -12,8 +12,15 @@
   <label for="complement">Complément</label>
   <input type="text" class="form-control" id="complement" required [(ngModel)]="model.complement" name="complement">
 </div>
+    <div>
+  <label for="place">Lieu</label>
+  <input type="text" class="form-control" id="place" required [(ngModel)]="model.place" name="place">
+</div>
 <div>
   <button type="submit">Générer !</button>
 </div>
 </form>
+  <div>
+    {{sentence.sentence}}
+  </div>
 </div>

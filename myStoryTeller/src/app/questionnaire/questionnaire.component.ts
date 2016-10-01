@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
 import {SentenceGeneratorService} from "../sentence-generator.service";
 import {Questionnaire} from "./questionnaire";
+import {Sentence} from "./Sentence";
 
 @Component({
   selector: 'app-questionnaire',
@@ -10,17 +11,19 @@ import {Questionnaire} from "./questionnaire";
 })
 export class QuestionnaireComponent implements OnInit {
 
-  model: Questionnaire = new Questionnaire('Mary Rouana', 'be', 'smokable');
+  model: Questionnaire = new Questionnaire('Mary', 'fummer', 'Rouana', 'camp de hippie');
+
+  private sentence: Sentence;
 
   constructor(private sentenceGeneratorService: SentenceGeneratorService) {
   }
 
   ngOnInit() {
-    console.log(this.sentenceGeneratorService.GetSentence());
+    this.sentence = new Sentence('');
   }
 
   generate() {
-    console.log("toto");
+    this.sentenceGeneratorService.getSentence(this.model).subscribe((data:Sentence) => this.sentence = data);
   }
 
 }
