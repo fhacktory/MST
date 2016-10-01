@@ -1,29 +1,33 @@
 package fr.fhacktory.data.service;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
-import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;	
+import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
+import fr.fhacktory.model.Quote;
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class wikidataFetcher {
 
 	public wikidataFetcher() {
 		// TODO Auto-generated constructor stub
 	}
 
+	@CrossOrigin(origins = "*")
 	@RequestMapping("/callFetch")
 	public String fetch(@RequestParam(value = "entityName", defaultValue = "Terry Pratchett") String entityName)
 			throws MediaWikiApiErrorException {
 		WikibaseDataFetcher wbdf = WikibaseDataFetcher.getWikidataDataFetcher();
-//		wbdf.getFilter().setLanguageFilter(Collections.singleton("fr"));
+		// wbdf.getFilter().setLanguageFilter(Collections.singleton("fr"));
 		EntityDocument entity = wbdf.getEntityDocumentByTitle("frwiki", entityName);
 
 		if (entity instanceof ItemDocument) {
@@ -92,4 +96,19 @@ public class wikidataFetcher {
 		//
 		// System.out.println("*** Done.");
 	}
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping("/callFetch2")
+	public void test() {
+        Quote quote = restTemplate.getForObject("http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
+        log.info(quote.toString());
+        
+        
+//        restTemplate.get
+        
+    }
+
 }
