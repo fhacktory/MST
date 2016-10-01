@@ -2,16 +2,15 @@
   <form>
 <div>
   <label for="subject">Sujet</label>
-  <input type="text" class="form-control" id="subject" required>
-  TODO: remove this: {{model.subject}}
+  <input type="text" class="form-control" id="subject" required [(ngModel)]="model.subject" name="subject">
 </div>
 <div>
   <label for="verb">Verbe</label>
-  <input type="text" class="form-control" id="verb" required>
+  <input type="text" class="form-control" id="verb" required [(ngModel)]="model.verb" name="verb">
 </div>
 <div>
   <label for="complement">Complément</label>
-  <input type="text" class="form-control" id="complement" required>
+  <input type="text" class="form-control" id="complement" required [(ngModel)]="model.complement" name="complement">
 </div>
 <div>
   <button type="submit">Générer !</button>
