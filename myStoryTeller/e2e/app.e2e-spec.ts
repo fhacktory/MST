@@ -9,6 +9,6 @@ describe('my-story-teller App', function() {
 
   it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('mst works!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });

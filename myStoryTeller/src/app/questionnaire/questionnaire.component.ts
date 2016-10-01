@@ -1,30 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
+import {SentenceGeneratorService} from "../sentence-generator.service";
+import {Questionnaire} from "./questionnaire";
 
 @Component({
-  selector: 'mst-questionnaire',
+  selector: 'app-questionnaire',
   templateUrl: './questionnaire.component.html',
   styleUrls: ['./questionnaire.component.css']
 })
 export class QuestionnaireComponent implements OnInit {
 
-  sentenceForm: FormGroup
-  subject: FormControl;
-  complement: FormControl;
-  verb: FormControl;
+  model: Questionnaire = new Questionnaire('Mary Rouana', 'be', 'smokable');
 
-  constructor(fb: FormBuilder) {
-    this.subject = fb.control('Toto');
-    this.complement = fb.control('eat');
-    this.verb = fb.control('apple');
-    this.sentenceForm = fb.group({
-      subject: this.subject,
-      verb: this.verb,
-      complement: this.complement
-    });
+  constructor(private sentenceGeneratorService: SentenceGeneratorService) {
   }
 
   ngOnInit() {
+    console.log(this.sentenceGeneratorService.GetSentence());
   }
 
   generate() {
