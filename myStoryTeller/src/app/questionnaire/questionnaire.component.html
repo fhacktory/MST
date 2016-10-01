@@ -1,26 +1,26 @@
 <div>
-  <form (ngSubmit)="generate()">
-<div>
-  <label for="subject">Sujet</label>
-  <input type="text" class="form-control" id="subject" required [(ngModel)]="model.subject" name="subject">
-</div>
-<div>
-  <label for="verb">Verbe</label>
-  <input type="text" class="form-control" id="verb" required [(ngModel)]="model.verb" name="verb">
-</div>
-<div>
-  <label for="complement">Complément</label>
-  <input type="text" class="form-control" id="complement" required [(ngModel)]="model.complement" name="complement">
-</div>
-    <div>
-  <label for="place">Lieu</label>
-  <input type="text" class="form-control" id="place" required [(ngModel)]="model.place" name="place">
-</div>
-<div>
-  <button type="submit">Générer !</button>
-</div>
-</form>
-  <div>
+  <div *ngFor="let sentence of sentences">
     {{sentence.sentence}}
   </div>
+  <form (ngSubmit)="generate()">
+    <div class="col-md-3">
+      <label for="subject">Sujet</label>
+      <input type="text" class="form-control" id="subject" [(ngModel)]="model.subject" name="subject">
+    </div>
+    <div class="col-md-3">
+      <label for="verb">Verbe</label>
+      <input type="text" class="form-control" id="verb" [(ngModel)]="model.verb" name="verb">
+    </div>
+    <div class="col-md-3">
+      <label for="complement">Complément</label>
+      <input type="text" class="form-control" id="complement" [(ngModel)]="model.complement" name="complement">
+    </div>
+    <div class="col-md-3">
+      <label for="place">Lieu</label>
+      <input type="text" class="form-control" id="place" [(ngModel)]="model.place" name="place">
+    </div>
+    <div class="col-md-3">
+      <button type="submit">Générer !</button>
+    </div>
+  </form>
 </div>

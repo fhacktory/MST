@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from "@angular/forms";
 import {SentenceGeneratorService} from "../sentence-generator.service";
-import {Questionnaire} from "./questionnaire";
+import {Questionnaire, StepForm} from "./StepForm";
 import {Sentence} from "./Sentence";
 
 @Component({
@@ -11,19 +11,18 @@ import {Sentence} from "./Sentence";
 })
 export class QuestionnaireComponent implements OnInit {
 
-  model: Questionnaire = new Questionnaire('Mary', 'fummer', 'Rouana', 'camp de hippie');
+  model: StepForm = new StepForm('', '', '', '');
 
-  private sentence: Sentence;
+  private sentences: Sentence[];
 
-  constructor(private sentenceGeneratorService: SentenceGeneratorService) {
-  }
+  constructor(private sentenceGeneratorService: SentenceGeneratorService) { }
 
   ngOnInit() {
     this.sentence = new Sentence('');
   }
 
   generate() {
-    this.sentenceGeneratorService.getSentence(this.model).subscribe((data:Sentence) => this.sentence = data);
+    this.sentenceGeneratorService.getSentences(this.model).subscribe((data:Sentence[]) => this.sentences = data);
   }
 
 }

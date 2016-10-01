@@ -1,4 +1,5 @@
 export class Sentence {
 
-  constructor(private sentence: string) { }
+  constructor(public id: integer, public sentence: string) { }
+
 }
