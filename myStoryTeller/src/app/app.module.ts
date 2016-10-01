@@ -1,20 +1,23 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule  } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import {MenuComponent} from "./menu/menu.component";
+import {QuestionnaireComponent} from "./questionnaire/questionnaire.component";
+import {SentenceGeneratorService} from "./sentence-generator.service";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, MenuComponent, QuestionnaireComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [SentenceGeneratorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

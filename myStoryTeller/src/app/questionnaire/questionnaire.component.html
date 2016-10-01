@@ -1,0 +1,19 @@
+<div>
+<form (ngSubmit)="generate()" [formGroup]="sentenceForm">
+  <div>
+    <label>Sujet</label>
+    <input formControlName="subject">
+  </div>
+  <div>
+    <label>Verbe</label>
+    <input formControlName="verb" >
+  </div>
+  <div>
+    <label>Complément</label>
+    <input formControlName="complement">
+  </div>
+  <div>
+    <button type="submit">Générer !</button>
+  </div>
+</form>
+</div>
