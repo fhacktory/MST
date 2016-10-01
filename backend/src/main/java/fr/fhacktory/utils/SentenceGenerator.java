@@ -1,23 +1,13 @@
-package fr.fhacktory.nlg;
+package fr.fhacktory.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import fr.fhacktory.model.Sentence;
 import fr.fhacktory.model.StepForm;
-import fr.fhacktory.model.repository.SentenceRepository;
-import fr.fhacktory.utils.AdjectifsGenerator;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import simplenlg.features.Feature;
 import simplenlg.features.Tense;
@@ -29,29 +19,19 @@ import simplenlg.phrasespec.PPPhraseSpec;
 import simplenlg.phrasespec.SPhraseSpec;
 import simplenlg.realiser.Realiser;
 
-@RestController
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
+@UtilityClass
 @Slf4j
-public class PhraseGenerator {
+public class SentenceGenerator {
 
-	private NLGFactory nlgFactory;
-	private Realiser realiser;
-	private static final String template = "Hello, %s!";
+	static public Lexicon lexicon = new XMLLexicon();
+	static public NLGFactory nlgFactory = new NLGFactory(lexicon);
+	static public Realiser realiser = new Realiser();
 
-	@Autowired
-	SentenceRepository sentenceRepository;
-
-	@RequestMapping("/greeting")
-	public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format(template, name);
-	}
-
-	@PostMapping("/sentenceGenerator")
-	@GetMapping("/sentenceGenerator")
-	public List<Sentence> generateSentence(@RequestBody StepForm questionnaire) {
+	public static List<Sentence> generateSentence(StepForm questionnaire) {
 		log.debug(questionnaire.toString());
 		List<Sentence> sentenceList = new ArrayList<>();
 		try {
+			Sentence sentence = new Sentence();
 			NPPhraseSpec sujet;
 			if (StringUtils.isBlank(questionnaire.getSubject())) {
 				sujet = nlgFactory.createNounPhrase("Cédric");
@@ -89,36 +69,26 @@ public class PhraseGenerator {
 
 			PPPhraseSpec dansLieux = nlgFactory.createPrepositionPhrase("dans", lieu);
 
-			SPhraseSpec phrase = nlgFactory.createClause(sujet, questionnaire.getVerb(), complement);
+			SPhraseSpec phrase = nlgFactory.createClause(sujet, verb, complement);
 			phrase.setComplement(dansLieux);
 			phrase.setFeature(Feature.TENSE, Tense.PAST);
 
-			Sentence sentence = new Sentence();
-			sentence.setSentence(this.realiser.realiseSentence(phrase));
+			sentence.setSentence(realiser.realiseSentence(phrase));
 			log.debug(sentence.getSentence());
-			sentence = sentenceRepository.save(sentence);
 			sentenceList.add(sentence);
 
 			Sentence sentence2 = new Sentence();
 			PPPhraseSpec complementDuNomCategorie = nlgFactory.createPrepositionPhrase("de", "campagne");
 			lieu.addComplement(complementDuNomCategorie);
 
-			sentence2.setSentence(this.realiser.realiseSentence(phrase));
+			sentence2.setSentence(realiser.realiseSentence(phrase));
 			log.debug(sentence2.getSentence());
-			sentence2 = sentenceRepository.save(sentence2);
 			sentenceList.add(sentence2);
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 		return sentenceList;
-	}
-
-	public PhraseGenerator() {
-		super();
-		Lexicon lexicon = new XMLLexicon();
-		this.nlgFactory = new NLGFactory(lexicon);
-		this.realiser = new Realiser();
 	}
 
 }
