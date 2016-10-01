@@ -1,7 +1,5 @@
 package fr.fhacktory.nlg;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
