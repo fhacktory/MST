@@ -1,15 +1,16 @@
 package fr.fhacktory.model;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import lombok.Data;
 
-
 @Data
-public class Sentence {
-
-	public Sentence() {
-		// TODO Auto-generated constructor stub
-	}
-
+@Entity
+public class Sentence implements Serializable {
+	@Id
+	private Integer id;
 	private String sentence;
 }
