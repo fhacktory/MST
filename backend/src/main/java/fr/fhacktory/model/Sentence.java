@@ -1,8 +1,10 @@
 package fr.fhacktory.model;
 
-import javax.annotation.Generated;
+
+import lombok.Data;
 
 
+@Data
 public class Sentence {
 
 	public Sentence() {
