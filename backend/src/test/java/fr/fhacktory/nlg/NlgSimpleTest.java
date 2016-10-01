@@ -3,10 +3,11 @@ package fr.fhacktory.nlg;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import simplenlg.framework.NLGFactory;
+import simplenlg.framework.*;
 import simplenlg.lexicon.Lexicon;
-import simplenlg.phrasespec.SPhraseSpec;
-import simplenlg.realiser.english.Realiser;
+import simplenlg.lexicon.french.XMLLexicon;
+import simplenlg.realiser.*;
+import simplenlg.phrasespec.*;
 
 /**
  * Created by aurelien.mino on 01/10/2016.
@@ -18,18 +19,17 @@ public class NlgSimpleTest {
 
     @Before
     public void setup() {
-        Lexicon lexicon = Lexicon.getDefaultLexicon();
+        Lexicon lexicon = new XMLLexicon();
         this.nlgFactory = new NLGFactory(lexicon);
-        this.realiser = new Realiser(lexicon);
+        this.realiser = new Realiser();
     }
 
     @Test
     public void simpleEnSentence() {
-        SPhraseSpec p = nlgFactory.createClause();
-        p.setSubject("Mary");
-        p.setVerb("chase");
-        p.setObject("the monkey");
+        NPPhraseSpec theMan = nlgFactory.createNounPhrase("le", "homme");
+        NPPhraseSpec theCrowd = nlgFactory.createNounPhrase("le", "foule");
+        SPhraseSpec greeting = nlgFactory.createClause(theMan, "saluer", theCrowd);
 
-        Assertions.assertThat(this.realiser.realiseSentence(p)).isEqualTo("Mary chases the monkey.");
+        Assertions.assertThat(this.realiser.realiseSentence(greeting)).isEqualTo("L'homme salue la foule.");
     }
 }

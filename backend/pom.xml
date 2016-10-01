@@ -50,9 +50,11 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.abdn</groupId>
-            <artifactId>SimpleNLG</artifactId>
-            <version>4.4.8</version>
+            <groupId>SimpleNLG-EnFr</groupId>
+            <artifactId>SimpleNLG-EnFr</artifactId>
+            <version>1.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/SimpleNLG-EnFr-1.1-jar-with-dependencies.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -70,6 +72,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
     </build>
 
