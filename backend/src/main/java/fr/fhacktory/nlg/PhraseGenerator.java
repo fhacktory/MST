@@ -67,8 +67,7 @@ public class PhraseGenerator {
 				complement = nlgFactory.createNounPhrase("le", questionnaire.getComplement());
 			}
 			// Ajout d'un adjectif au complément
-			AdjectifsGenerator adjectifsGenerator = new AdjectifsGenerator();
-			String adjectif = adjectifsGenerator.getAnAdjectif();
+			String adjectif = AdjectifsGenerator.getAnAdjectif();
 			complement.addModifier(adjectif);
 
 			NPPhraseSpec lieu;
@@ -79,8 +78,8 @@ public class PhraseGenerator {
 				lieu = nlgFactory.createNounPhrase("le", questionnaire.getPlace());
 			}
 			// Ajout d'un adjectif au complément
-			String adjectifLieu = adjectifsGenerator.getAnAdjectif();
-			complement.addModifier(adjectifLieu);
+			String adjectifLieu = AdjectifsGenerator.getAnAdjectif();
+			lieu.addModifier(adjectifLieu);
 
 			String verb = StringUtils.isBlank(questionnaire.getVerb()) ? "Manger" : questionnaire.getVerb();
 

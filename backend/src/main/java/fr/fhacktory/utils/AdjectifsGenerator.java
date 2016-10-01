@@ -4,18 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import lombok.Data;
+import lombok.experimental.UtilityClass;
 
 /**
  * Generate a random adjective
- * 
+ *
  * @author mohamed.yengui
  *
  */
-@Data
+@UtilityClass
 public class AdjectifsGenerator {
 
-	private final List<String> adjectifs = Arrays.asList("Absolu", "Admirable", "Agréable", "Aimable", "Amusant",
+	private static final List<String> adjectifs = Arrays.asList("Absolu", "Admirable", "Agréable", "Aimable", "Amusant",
 			"Apocalyptique", "Approximatif", "Attachant", "Banal", "Bas", "Bavarois", "Bien", "Bof", "Bon",
 			"Bouleversant", "Boute-en-train", "Captivant", "Caractériel", "Cataclysmique", "Catastrophique", "Céleste",
 			"Charmant", "Chef-d’œuvre", "Chouette", "Commun", "convenable", "Convivial", "Coquet", "Correct",
@@ -35,8 +35,8 @@ public class AdjectifsGenerator {
 			"Trépidant", "Trèsbon", "Troublant", "Valable", "Valeureux", "Vénérable", "Vitaminés", "Vivable",
 			"Vulgaire");
 
-	public String getAnAdjectif() {
+	public static String getAnAdjectif() {
 		Random rand = new Random();
-		return adjectifs.get(rand.nextInt(adjectifs.size()));
+		return adjectifs.get(rand.nextInt(adjectifs.size())).toLowerCase();
 	}
 }
