@@ -26,6 +26,7 @@ public class Sentence implements Serializable {
 	private String place;
 	private String adjectivComplement;
 	private String adjectivPlace;
+	private String imageUrl;
 
 	public Sentence() {
 		super();
