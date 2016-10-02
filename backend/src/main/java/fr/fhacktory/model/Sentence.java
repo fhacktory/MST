@@ -51,7 +51,7 @@ public class Sentence implements Serializable {
 			setComplement(questionnaire.getComplement());
 		}
 		if (Math.random() > 0.5) {
-			setAdjectivComplement(AdjectifsGenerator.getAnAdjectif());
+			setAdjectivComplement(AdjectifsGenerator.getAnObjectAdjectif());
 		}
 		if (StringUtils.isBlank(questionnaire.getPlace())) {
 			setPlace(PlaceGenerator.getPlace());
@@ -59,7 +59,7 @@ public class Sentence implements Serializable {
 			setPlace(questionnaire.getPlace());
 		}
 		if (Math.random() > 0.5) {
-			setAdjectivPlace(AdjectifsGenerator.getAnAdjectif());
+			setAdjectivPlace(AdjectifsGenerator.getAnObjectAdjectif());
 		}
 		if (StringUtils.isBlank(questionnaire.getVerb())) {
 			setVerb(VerbGenerator.getAVerb());
