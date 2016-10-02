@@ -1,26 +1,40 @@
 <div>
-  <div *ngFor="let sentence of sentences">
-    {{sentence.sentence}}
-  </div>
   <form (ngSubmit)="generate()">
-    <div class="col-md-3">
-      <label for="subject">Sujet</label>
-      <input type="text" class="form-control" id="subject" [(ngModel)]="model.subject" name="subject">
+    <div class="col-md-12">
+      <label *ngFor="let sentence of sentences" class="col-md-12">
+        <input type="radio" name="options" [value]="sentence.id" [(ngModel)]="model.idSentence">
+        {{sentence.sentence}}
+      </label>
     </div>
-    <div class="col-md-3">
-      <label for="verb">Verbe</label>
-      <input type="text" class="form-control" id="verb" [(ngModel)]="model.verb" name="verb">
+    <div class="col-md-12">
+      <div class="col-md-3" [class.hidden]="subjectHide()">
+        <label for="subject">Sujet</label>
+        <input type="text" class="form-control" id="subject" [(ngModel)]="model.subject" name="subject">
+      </div>
+      <div class="col-md-3" [class.hidden]="verbHide()">
+        <label for="verb">Verbe</label>
+        <input type="text" class="form-control" id="verb" [(ngModel)]="model.verb" name="verb">
+      </div>
+      <div class="col-md-3" [class.hidden]="complementHide()">
+        <label for="complement">Complément</label>
+        <input type="text" class="form-control" id="complement" [(ngModel)]="model.complement" name="complement">
+      </div>
+      <div class="col-md-3" [class.hidden]="placeHide()">
+        <label for="place">Lieu</label>
+        <input type="text" class="form-control" id="place" [(ngModel)]="model.place" name="place">
+      </div>
     </div>
-    <div class="col-md-3">
-      <label for="complement">Complément</label>
-      <input type="text" class="form-control" id="complement" [(ngModel)]="model.complement" name="complement">
-    </div>
-    <div class="col-md-3">
-      <label for="place">Lieu</label>
-      <input type="text" class="form-control" id="place" [(ngModel)]="model.place" name="place">
-    </div>
-    <div class="col-md-3">
-      <button type="submit">Générer !</button>
+
+    <div class="col-md-12">
+      <div class="col-md-1">
+        <button type="submit" (click)="model.actionType=1">Poursuivre</button>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" (click)="model.actionType=2">Compléter</button>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" (click)="model.actionType=3">Fin</button>
+      </div>
     </div>
   </form>
 </div>

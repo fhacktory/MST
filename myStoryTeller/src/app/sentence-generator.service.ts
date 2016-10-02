@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import 'rxjs/add/operator/map'
-import { Configuration } from "./app.constant";
+import 'rxjs/add/operator/map';
+import { Configuration } from './app.constant';
 import { Observable } from 'rxjs/Observable';
-import {Questionnaire} from "./questionnaire/StepForm";
-import {Sentence} from "./questionnaire/Sentence";
+import {Sentence} from './questionnaire/Sentence';
+import {StepForm} from './questionnaire/StepForm';
 
 @Injectable()
 export class SentenceGeneratorService {
@@ -13,16 +13,16 @@ export class SentenceGeneratorService {
   private headers: Headers;
 
   constructor(private http: Http, private configuration: Configuration) {
-    this.actionUrl = configuration.ServerWithApiUrl+'sentenceGenerator';
+    this.actionUrl = configuration.ServerWithApiUrl + 'sentenceGenerator';
 
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
     this.headers.append('Accept', 'application/json');
   }
 
-  public getSentences = (questionnaire: Questionnaire): Observable<Sentence> => {
-    console.log(JSON.stringify(questionnaire));
-    return this.http.post(this.actionUrl, JSON.stringify(questionnaire), {headers: this.headers})
+  public getSentences = (stepForm: StepForm): Observable<Sentence[]> => {
+    console.log(JSON.stringify(stepForm));
+    return this.http.post(this.actionUrl, JSON.stringify(stepForm), {headers: this.headers})
           .map((response: Response) => <Sentence[]> response.json());
   }
 }

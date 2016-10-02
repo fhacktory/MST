@@ -7,8 +7,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
 import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
-import {SentenceGeneratorService} from "./sentence-generator.service";
-import {Configuration} from "./app.constant";
+import {SentenceGeneratorService} from './sentence-generator.service';
+import {Configuration} from './app.constant';
 
 @NgModule({
   declarations: [
