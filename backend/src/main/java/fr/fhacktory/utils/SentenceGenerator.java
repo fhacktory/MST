@@ -47,8 +47,8 @@ public class SentenceGenerator {
 	private static Sentence generateOneSentence(StepForm questionnaire) {
 		Sentence sentence = new Sentence(questionnaire);
 
-		sentence.setSentence(sentenceToPhrase(sentence));
-		log.debug(sentence.getSentence());
+		sentence.setGeneratedSentence(sentenceToPhrase(sentence));
+		log.debug(sentence.getGeneratedSentence());
 
 		return sentence;
 	}

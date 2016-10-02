@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.fhacktory.utils.AdjectifsGenerator;
+import fr.fhacktory.utils.NameGenerator;
+import fr.fhacktory.utils.ObjectGenerator;
 import fr.fhacktory.utils.PlaceGenerator;
 import fr.fhacktory.utils.VerbGenerator;
 import lombok.Data;
@@ -19,7 +21,7 @@ public class Sentence implements Serializable {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	private String sentence;
+	private String generatedSentence;
 	private String subject;
 	private String verb;
 	private String complement;
@@ -35,17 +37,16 @@ public class Sentence implements Serializable {
 		super();
 
 		if (StringUtils.isBlank(questionnaire.getSubject())) {
-			setSubject("Cédric");
+			setSubject(NameGenerator.getAName());
 		} else {
 			setSubject(questionnaire.getSubject());
 		}
 		if (StringUtils.isBlank(questionnaire.getComplement())) {
-			setComplement("glace");
+			setComplement(ObjectGenerator.getAnObject());
 		} else {
 			setComplement(questionnaire.getComplement());
 		}
-		// TODO : Aléatoire
-		if (true) {
+		if (Math.random() > 0.5) {
 			setAdjectivComplement(AdjectifsGenerator.getAnAdjectif());
 		}
 		if (StringUtils.isBlank(questionnaire.getPlace())) {
@@ -53,8 +54,7 @@ public class Sentence implements Serializable {
 		} else {
 			setPlace(questionnaire.getPlace());
 		}
-		// TODO : Aléatoire
-		if (true) {
+		if (Math.random() > 0.5) {
 			setAdjectivPlace(AdjectifsGenerator.getAnAdjectif());
 		}
 		if (StringUtils.isBlank(questionnaire.getVerb())) {
