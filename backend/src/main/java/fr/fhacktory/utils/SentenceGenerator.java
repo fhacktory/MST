@@ -7,11 +7,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import fr.fhacktory.model.Sentence;
 import fr.fhacktory.model.StepForm;
+import fr.fhacktory.model.Story;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import simplenlg.features.Feature;
 import simplenlg.features.Tense;
-import simplenlg.features.french.FrenchFeature;
+import simplenlg.framework.CoordinatedPhraseElement;
 import simplenlg.framework.NLGFactory;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.lexicon.french.XMLLexicon;
@@ -28,12 +29,12 @@ public class SentenceGenerator {
 	static public NLGFactory nlgFactory = new NLGFactory(lexicon);
 	static public Realiser realiser = new Realiser();
 
-	public static List<Sentence> generateSentence(StepForm questionnaire) {
+	public static List<Sentence> generateSentence(StepForm questionnaire, Story currentStory) {
 		log.debug(questionnaire.toString());
 		List<Sentence> sentenceList = new ArrayList<>();
 		try {
 			for (int i = 0; i < 2; i++) {
-				sentenceList.add(generateOneSentence(questionnaire));
+				sentenceList.add(generateOneSentence(questionnaire, currentStory));
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -45,10 +46,10 @@ public class SentenceGenerator {
 	 * @param questionnaire
 	 * @param sentenceList
 	 */
-	private static Sentence generateOneSentence(StepForm questionnaire) {
-		Sentence sentence = new Sentence(questionnaire);
+	private static Sentence generateOneSentence(StepForm questionnaire, Story currentStory) {
+		Sentence sentence = new Sentence(questionnaire, currentStory);
 
-		sentence.setGeneratedSentence(sentenceToPhrase(sentence));
+		sentence.setGeneratedSentence(sentenceToPhrase(sentence, currentStory));
 		log.debug(sentence.getGeneratedSentence());
 
 		return sentence;
@@ -58,7 +59,17 @@ public class SentenceGenerator {
 	 * @param sentence
 	 * @return
 	 */
-	private static String sentenceToPhrase(Sentence sentence) {
+	public static String sentenceToPhrase(Sentence sentence, Story currentStory) {
+		SPhraseSpec ilEtaitUneFois = null;
+		if (currentStory == null || currentStory.getSentences() == null || currentStory.getSentences().isEmpty()) {
+			// Il était une fois
+			NPPhraseSpec unFois = nlgFactory.createNounPhrase("un", "fois");
+			ilEtaitUneFois = nlgFactory.createClause("il", "être", unFois);
+			ilEtaitUneFois.setFeature(Feature.TENSE, Tense.PAST);
+			ilEtaitUneFois.setFeature(Feature.PROGRESSIVE, true);
+			ilEtaitUneFois.setFeature(Feature.PERFECT, false);
+		}
+
 		NPPhraseSpec sujet = nlgFactory.createNounPhrase(sentence.getSubject());
 
 		NPPhraseSpec complement = nlgFactory.createNounPhrase(Math.random() < 0.6 ? "le" : "un",
@@ -94,13 +105,13 @@ public class SentenceGenerator {
 		phrase.setFeature(Feature.PROGRESSIVE, true);
 		phrase.setFeature(Feature.PERFECT, false);
 
-		// Choix de la tournure relative
-		if (Math.random() < 0.05) {
-			phrase.setFeature(FrenchFeature.RELATIVE_PHRASE, complement);
+		if (ilEtaitUneFois != null) {
+			CoordinatedPhraseElement coordinatedPhrase = nlgFactory.createCoordinatedPhrase(ilEtaitUneFois, phrase);
+			return realiser.realiseSentence(coordinatedPhrase);
+		} else {
+			String stSentence = realiser.realiseSentence(phrase);
+			return stSentence;
 		}
-
-		String stSentence = realiser.realiseSentence(phrase);
-		return stSentence;
 	}
 
 }

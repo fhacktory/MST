@@ -3,8 +3,6 @@ package fr.fhacktory.mst;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.fhacktory.model.Story;
-import fr.fhacktory.model.repository.StoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.fhacktory.model.Sentence;
 import fr.fhacktory.model.StepForm;
+import fr.fhacktory.model.Story;
 import fr.fhacktory.model.repository.SentenceRepository;
+import fr.fhacktory.model.repository.StoryRepository;
 import fr.fhacktory.utils.SentenceGenerator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,11 +57,13 @@ public class SentenceControler {
 
 		List<Sentence> sentenceList;
 		if (questionnaire.getActionType() == 3) {
-			// Fin de l'histoire : on renvoie l'ensembles des phrases de l'histoire
+			// Fin de l'histoire : on renvoie l'ensembles des phrases de
+			// l'histoire
 			sentenceList = currentStory.getSentences();
 		} else {
-			// Poursuite de l'histoire : on génère de nouvelles phrases que l'on va renvoyer
-			sentenceList = SentenceGenerator.generateSentence(questionnaire);
+			// Poursuite de l'histoire : on génère de nouvelles phrases que l'on
+			// va renvoyer
+			sentenceList = SentenceGenerator.generateSentence(questionnaire, currentStory);
 			for (Sentence sentence : sentenceList) {
 				sentenceRepository.save(sentence);
 			}

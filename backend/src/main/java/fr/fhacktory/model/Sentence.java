@@ -9,9 +9,7 @@ import javax.persistence.Id;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.fhacktory.utils.AdjectifsGenerator;
-import fr.fhacktory.utils.NameGenerator;
 import fr.fhacktory.utils.ObjectGenerator;
-import fr.fhacktory.utils.PlaceGenerator;
 import fr.fhacktory.utils.VerbGenerator;
 import lombok.Data;
 
@@ -37,11 +35,11 @@ public class Sentence implements Serializable {
 	 * @param questionnaire
 	 * @return
 	 */
-	public Sentence(StepForm questionnaire) {
+	public Sentence(StepForm questionnaire, Story currentStory) {
 		super();
 
 		if (StringUtils.isBlank(questionnaire.getSubject())) {
-			setSubject(NameGenerator.getAName());
+			setSubject(currentStory.getRandomCharacter());
 		} else {
 			setSubject(questionnaire.getSubject());
 		}
@@ -54,7 +52,9 @@ public class Sentence implements Serializable {
 			setAdjectivComplement(AdjectifsGenerator.getAnObjectAdjectif());
 		}
 		if (StringUtils.isBlank(questionnaire.getPlace())) {
-			setPlace(PlaceGenerator.getPlace());
+			if (Math.random() > 0.4) {
+				setPlace(currentStory.getRandomPlace());
+			}
 		} else {
 			setPlace(questionnaire.getPlace());
 		}
