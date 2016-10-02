@@ -11,11 +11,13 @@ export class SentenceGeneratorService {
 
   private actionUrl: string;
   private resetUrl: string;
+  private fullStoryUrl: string;
   private headers: Headers;
 
   constructor(private http: Http, private configuration: Configuration) {
     this.actionUrl = configuration.ServerWithApiUrl + 'sentenceGenerator';
     this.resetUrl = configuration.ServerWithApiUrl + 'resetStory';
+    this.fullStoryUrl = configuration.ServerWithApiUrl + 'fullStory';
 
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
@@ -30,5 +32,10 @@ export class SentenceGeneratorService {
 
   public resetStory = (): Observable<Response> => {
     return this.http.get(this.resetUrl);
+  }
+
+  public fullStory = (): Observable<Sentence[]> => {
+    return this.http.get(this.fullStoryUrl, {headers: this.headers})
+      .map((response: Response) => <Sentence[]> response.json());
   }
 }

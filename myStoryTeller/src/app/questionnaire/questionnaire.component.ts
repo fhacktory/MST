@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {SentenceGeneratorService} from '../sentence-generator.service';
 import { StepForm } from './StepForm';
 import { Sentence } from './Sentence';
-import {Configuration} from "../app.constant";
+import {Configuration} from '../app.constant';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-questionnaire',
@@ -17,7 +18,9 @@ export class QuestionnaireComponent implements OnInit {
 
   private rand: number;
 
-  constructor(private sentenceGeneratorService: SentenceGeneratorService, private configuration: Configuration) { }
+  constructor(private sentenceGeneratorService: SentenceGeneratorService,
+              private configuration: Configuration,
+              private router: Router) { }
 
   ngOnInit() {
     this.reset();
@@ -35,9 +38,11 @@ export class QuestionnaireComponent implements OnInit {
 
   generate() {
     this.sentenceGeneratorService.getSentences(this.model).subscribe((data: Sentence[]) => {
+      if (this.model.actionType === 3) {
+        this.router.navigate(['/theend']);
+      }
       this.reset();
       this.sentences = data;
-      console.log(this.sentences);
     });
   }
 
