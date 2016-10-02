@@ -11,6 +11,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import simplenlg.features.Feature;
 import simplenlg.features.Tense;
+import simplenlg.features.french.FrenchFeature;
 import simplenlg.framework.NLGFactory;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.lexicon.french.XMLLexicon;
@@ -60,29 +61,44 @@ public class SentenceGenerator {
 	private static String sentenceToPhrase(Sentence sentence) {
 		NPPhraseSpec sujet = nlgFactory.createNounPhrase(sentence.getSubject());
 
-		NPPhraseSpec complement = nlgFactory.createNounPhrase("le", sentence.getComplement());
+		NPPhraseSpec complement = nlgFactory.createNounPhrase(Math.random() < 0.6 ? "le" : "un",
+				sentence.getComplement());
+		if (Math.random() < 0.2) {
+			complement.setPlural(true);
+		}
 		// Ajout d'un adjectif au complément
 		if (StringUtils.isNotBlank(sentence.getAdjectivComplement())) {
 			complement.addModifier(sentence.getAdjectivComplement());
 		}
 
 		// Ajout d'un adjectif au complément
-		NPPhraseSpec place = nlgFactory.createNounPhrase("le", sentence.getPlace());
+		NPPhraseSpec place = nlgFactory.createNounPhrase(Math.random() < 0.6 ? "le" : "un", sentence.getPlace());
 		if (StringUtils.isNotBlank(sentence.getAdjectivPlace())) {
 			place.addModifier(sentence.getAdjectivPlace());
 		}
 
 		String verb = sentence.getVerb();
 
-		// PPPhraseSpec complementDuNomMatiere =
-		// nlgFactory.createPrepositionPhrase("en", "pierre");
-		// lieu.addModifier(complementDuNomMatiere);
-
-		PPPhraseSpec dansLieux = nlgFactory.createPrepositionPhrase("dans", place);
+		PPPhraseSpec dansLieux = nlgFactory
+				.createPrepositionPhrase(Math.random() < 0.4 ? "dans" : Math.random() < 0.4 ? "sur" : "vers", place);
 
 		SPhraseSpec phrase = nlgFactory.createClause(sujet, verb, complement);
+
+		if (Math.random() < 0.05) {
+			phrase.setFeature(Feature.NEGATED, true);
+		}
+
 		phrase.setComplement(dansLieux);
+		// Temps : Imparfait
 		phrase.setFeature(Feature.TENSE, Tense.PAST);
+		phrase.setFeature(Feature.PROGRESSIVE, true);
+		phrase.setFeature(Feature.PERFECT, false);
+
+		// Choix de la tournure relative
+		if (Math.random() < 0.05) {
+			phrase.setFeature(FrenchFeature.RELATIVE_PHRASE, complement);
+		}
+
 		String stSentence = realiser.realiseSentence(phrase);
 		return stSentence;
 	}
