@@ -19,7 +19,7 @@ public class ObjectGenerator {
 	    "Voiture", "Walkman");
 
     public static String getAnObject() {
-	Random rand = new Random();
-	return objects.get(rand.nextInt(objects.size()));
-    }
+		Random rand = new Random();
+		return objects.get(rand.nextInt(objects.size()));
+	}
 }

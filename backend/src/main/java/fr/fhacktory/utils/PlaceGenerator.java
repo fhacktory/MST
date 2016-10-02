@@ -29,6 +29,6 @@ public class PlaceGenerator {
 
 	public static String getPlace() {
 		Random rand = new Random();
-		return places.get(rand.nextInt(places.size()));
+		return places.get(rand.nextInt(places.size())).toLowerCase();
 	}
 }

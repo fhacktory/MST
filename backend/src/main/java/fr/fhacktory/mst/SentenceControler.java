@@ -102,4 +102,16 @@ public class SentenceControler {
 	}
     }
 
+    /**
+     * Suppression de l'histoire en cours
+     *
+     * @param questionnaire
+     * @return
+     */
+    @RequestMapping("/resetStory")
+    public int resetStory() {
+	resetCurrentStory();
+	return 200;
+    }
+
 }
