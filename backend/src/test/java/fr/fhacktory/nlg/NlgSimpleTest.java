@@ -1,6 +1,6 @@
 package fr.fhacktory.nlg;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 import simplenlg.framework.*;
@@ -25,11 +25,11 @@ public class NlgSimpleTest {
     }
 
     @Test
-    public void simpleEnSentence() {
+    public void simpleFrenchSentence() {
         NPPhraseSpec theMan = nlgFactory.createNounPhrase("le", "homme");
         NPPhraseSpec theCrowd = nlgFactory.createNounPhrase("le", "foule");
         SPhraseSpec greeting = nlgFactory.createClause(theMan, "saluer", theCrowd);
 
-        Assertions.assertThat(this.realiser.realiseSentence(greeting)).isEqualTo("L'homme salue la foule.");
+        assertThat(this.realiser.realiseSentence(greeting)).isEqualTo("L'homme salue la foule.");
     }
 }
