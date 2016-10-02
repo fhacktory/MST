@@ -12,7 +12,6 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import simplenlg.features.Feature;
 import simplenlg.features.Tense;
-import simplenlg.framework.CoordinatedPhraseElement;
 import simplenlg.framework.NLGFactory;
 import simplenlg.lexicon.Lexicon;
 import simplenlg.lexicon.french.XMLLexicon;
@@ -82,36 +81,34 @@ public class SentenceGenerator {
 			complement.addModifier(sentence.getAdjectivComplement());
 		}
 
-		// Ajout d'un adjectif au complément
-		NPPhraseSpec place = nlgFactory.createNounPhrase(Math.random() < 0.6 ? "le" : "un", sentence.getPlace());
-		if (StringUtils.isNotBlank(sentence.getAdjectivPlace())) {
-			place.addModifier(sentence.getAdjectivPlace());
-		}
-
 		String verb = sentence.getVerb();
-
-		PPPhraseSpec dansLieux = nlgFactory
-				.createPrepositionPhrase(Math.random() < 0.4 ? "dans" : Math.random() < 0.4 ? "sur" : "vers", place);
-
 		SPhraseSpec phrase = nlgFactory.createClause(sujet, verb, complement);
+
+		// Gestion du lieu
+		if (StringUtils.isNotBlank(sentence.getPlace())) {
+			NPPhraseSpec place = nlgFactory.createNounPhrase(Math.random() < 0.6 ? "le" : "un", sentence.getPlace());
+			// Ajout d'un adjectif au lieu
+			if (StringUtils.isNotBlank(sentence.getAdjectivPlace())) {
+				place.addModifier(sentence.getAdjectivPlace());
+			}
+			PPPhraseSpec dansLieux = nlgFactory.createPrepositionPhrase(
+					Math.random() < 0.4 ? "dans" : Math.random() < 0.4 ? "sur" : "vers", place);
+			phrase.setComplement(dansLieux);
+		}
 
 		if (Math.random() < 0.05) {
 			phrase.setFeature(Feature.NEGATED, true);
 		}
 
-		phrase.setComplement(dansLieux);
 		// Temps : Imparfait
 		phrase.setFeature(Feature.TENSE, Tense.PAST);
 		phrase.setFeature(Feature.PROGRESSIVE, true);
 		phrase.setFeature(Feature.PERFECT, false);
 
 		if (ilEtaitUneFois != null) {
-			CoordinatedPhraseElement coordinatedPhrase = nlgFactory.createCoordinatedPhrase(ilEtaitUneFois, phrase);
-			return realiser.realiseSentence(coordinatedPhrase);
-		} else {
-			String stSentence = realiser.realiseSentence(phrase);
-			return stSentence;
+			phrase.addFrontModifier(ilEtaitUneFois);
 		}
+		return realiser.realiseSentence(phrase);
 	}
 
 }

@@ -21,4 +21,7 @@ public class StoryCharacter implements Serializable {
 	public StoryCharacter(String stCharacter) {
 		name = stCharacter;
 	}
+
+	public StoryCharacter() {
+	}
 }
