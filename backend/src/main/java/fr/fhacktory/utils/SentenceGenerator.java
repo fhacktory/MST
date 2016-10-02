@@ -67,7 +67,7 @@ public class SentenceGenerator {
 		// currentStory.getSentences().isEmpty()) {
 		// // Il était une fois
 		// NPPhraseSpec unFois = nlgFactory.createNounPhrase("un", "fois");
-		// ilEtaitUneFois = nlgFactory.createClause("il", "être", unFois);
+	    // ilEtaitUneFois = nlgFactory.createClause("il", "être", unFois);
 		// ilEtaitUneFois.setFeature(Feature.TENSE, Tense.PAST);
 		// ilEtaitUneFois.setFeature(Feature.PROGRESSIVE, true);
 		// ilEtaitUneFois.setFeature(Feature.PERFECT, false);

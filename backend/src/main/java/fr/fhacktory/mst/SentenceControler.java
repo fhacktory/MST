@@ -70,7 +70,7 @@ public class SentenceControler {
 
 	// Poursuite de l'histoire : on génère de nouvelles phrases que l'on va
 	// renvoyer
-	List<Sentence> sentenceList = SentenceGenerator.generateSentence(questionnaire);
+	List<Sentence> sentenceList = SentenceGenerator.generateSentence(questionnaire,currentStory);
 	for (Sentence sentence : sentenceList) {
 	    sentenceRepository.save(sentence);
 	}
