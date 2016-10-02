@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {SentenceGeneratorService} from '../sentence-generator.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,7 +10,7 @@ export class MenuComponent implements OnInit {
 
   private navbarCollapsed: boolean;
 
-  constructor() { }
+  constructor(private sentenceGeneratorService: SentenceGeneratorService) { }
 
   ngOnInit() {
     this.navbarCollapsed = true;
@@ -17,5 +18,9 @@ export class MenuComponent implements OnInit {
 
   toggleNavbar() {
     this.navbarCollapsed = !this.navbarCollapsed;
+  }
+
+  resetStory() {
+    this.sentenceGeneratorService.resetStory().subscribe();
   }
 }
