@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Sentence} from '../questionnaire/Sentence';
 import {SentenceGeneratorService} from '../sentence-generator.service';
 import {Observable} from "rxjs";
+import {Configuration} from '../app.constant';
 
 @Component({
   selector: 'app-awesome-story',
@@ -12,12 +13,22 @@ export class AwesomeStoryComponent implements OnInit {
 
   public sentences: Sentence[];
 
-  constructor(private sentenceGeneratorService: SentenceGeneratorService) { }
+  constructor(private sentenceGeneratorService: SentenceGeneratorService, private configuration: Configuration) { }
 
   ngOnInit() {
     this.sentenceGeneratorService.fullStory().subscribe((data: Sentence[]) => {
       this.sentences = data;
     });
+  }
+  
+  checkSpeak() {
+      this.configuration.speak("Chèque !");
+  }
+  
+  tellStory(){
+  
+  
+      this.configuration.speak("TODO :raconte tout !");
   }
 
 }
