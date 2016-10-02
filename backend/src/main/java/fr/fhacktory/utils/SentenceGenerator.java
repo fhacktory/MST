@@ -62,15 +62,16 @@ public class SentenceGenerator {
 	 * @return
 	 */
 	public static String sentenceToPhrase(Sentence sentence, Story currentStory) {
-		SPhraseSpec ilEtaitUneFois = null;
-		if (currentStory == null || currentStory.getSentences() == null || currentStory.getSentences().isEmpty()) {
-			// Il était une fois
-			NPPhraseSpec unFois = nlgFactory.createNounPhrase("un", "fois");
-			ilEtaitUneFois = nlgFactory.createClause("il", "être", unFois);
-			ilEtaitUneFois.setFeature(Feature.TENSE, Tense.PAST);
-			ilEtaitUneFois.setFeature(Feature.PROGRESSIVE, true);
-			ilEtaitUneFois.setFeature(Feature.PERFECT, false);
-		}
+		// SPhraseSpec ilEtaitUneFois = null;
+		// if (currentStory == null || currentStory.getSentences() == null ||
+		// currentStory.getSentences().isEmpty()) {
+		// // Il était une fois
+		// NPPhraseSpec unFois = nlgFactory.createNounPhrase("un", "fois");
+	    // ilEtaitUneFois = nlgFactory.createClause("il", "être", unFois);
+		// ilEtaitUneFois.setFeature(Feature.TENSE, Tense.PAST);
+		// ilEtaitUneFois.setFeature(Feature.PROGRESSIVE, true);
+		// ilEtaitUneFois.setFeature(Feature.PERFECT, false);
+		// }
 
 		NPPhraseSpec sujet = nlgFactory.createNounPhrase(sentence.getSubject());
 
@@ -108,8 +109,8 @@ public class SentenceGenerator {
 		phrase.setFeature(Feature.PROGRESSIVE, true);
 		phrase.setFeature(Feature.PERFECT, false);
 
-		if (ilEtaitUneFois != null) {
-			phrase.addFrontModifier(ilEtaitUneFois);
+		if (currentStory == null || currentStory.getSentences() == null || currentStory.getSentences().isEmpty()) {
+			phrase.addFrontModifier("Il était une fois");
 		}
 		return realiser.realiseSentence(phrase);
 	}
