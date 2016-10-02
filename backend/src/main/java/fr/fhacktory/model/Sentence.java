@@ -29,6 +29,10 @@ public class Sentence implements Serializable {
 	private String adjectivComplement;
 	private String adjectivPlace;
 
+	public Sentence() {
+		super();
+	}
+
 	/**
 	 * @param questionnaire
 	 * @return
