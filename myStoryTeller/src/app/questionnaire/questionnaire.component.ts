@@ -33,9 +33,11 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   generate() {
-    this.sentenceGeneratorService.getSentences(this.model).subscribe((data: Sentence[]) => this.sentences = data);
-    console.log(this.sentences);
-    this.reset();
+    this.sentenceGeneratorService.getSentences(this.model).subscribe((data: Sentence[]) => {
+      this.reset();
+      this.sentences = data;
+      console.log(this.sentences);
+    });
   }
 
   subjectHide() {
@@ -54,4 +56,11 @@ export class QuestionnaireComponent implements OnInit {
     return 4 !== this.rand;
   }
 
+  play(generatedSentence: string) {
+    let msg = new SpeechSynthesisUtterance(generatedSentence);
+    msg.lang = 'fr-FR';
+    let voices = window.speechSynthesis.getVoices();
+    msg.voice = voices.filter(function(voice) { return voice.name === 'Google français'; })[0];
+    window.speechSynthesis.speak(msg);
+  }
 }

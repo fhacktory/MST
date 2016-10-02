@@ -3,7 +3,8 @@
     <div class="col-md-12">
       <label *ngFor="let sentence of sentences" class="col-md-12">
         <input type="radio" name="options" [value]="sentence.id" [(ngModel)]="model.idSentence">
-        {{sentence.sentence}}
+        {{sentence.generatedSentence}}
+        <button (click)="play(sentence.generatedSentence)" type="button"><span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span></button>
       </label>
     </div>
     <div class="col-md-12">
