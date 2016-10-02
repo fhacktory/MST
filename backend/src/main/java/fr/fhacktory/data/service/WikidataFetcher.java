@@ -31,9 +31,11 @@ public class WikidataFetcher {
 			ItemDocument itemDoc = (ItemDocument) entity;
 			Statement statement = itemDoc.findStatement(Datamodel.makeWikidataPropertyIdValue("P18"));
 			if (statement != null && statement.getValue() != null) {
-				String imageUrl = String.format("The image is http://commons.wikimedia.org/wiki/Special:FilePath/%s",
+				String imageUrl = String.format("http://commons.wikimedia.org/wiki/Special:FilePath/%s",
 						statement.getValue().toString().replace("\"", ""));
+
 				System.out.println(String.format("The image is %s", imageUrl));
+				return imageUrl;
 			}
 		}
 		return null;
