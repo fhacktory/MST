@@ -3,6 +3,7 @@ package fr.fhacktory.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.fhacktory.data.service.WikidataFetcher;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.fhacktory.model.Sentence;
@@ -51,6 +52,8 @@ public class SentenceGenerator {
 
 		sentence.setGeneratedSentence(sentenceToPhrase(sentence, currentStory));
 		log.debug(sentence.getGeneratedSentence());
+
+		WikidataFetcher.retrieveImageForSentence(sentence);
 
 		return sentence;
 	}

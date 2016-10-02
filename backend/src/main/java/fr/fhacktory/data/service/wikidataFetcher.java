@@ -1,114 +1,60 @@
 package fr.fhacktory.data.service;
 
+import fr.fhacktory.model.Sentence;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.interfaces.EntityDocument;
 import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
+import org.wikidata.wdtk.datamodel.interfaces.Statement;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import fr.fhacktory.model.Quote;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
+@UtilityClass
 @Slf4j
-public class wikidataFetcher {
+public class WikidataFetcher {
 
-	public wikidataFetcher() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@CrossOrigin(origins = "*")
-	@RequestMapping("/callFetch")
-	public String fetch(@RequestParam(value = "entityName", defaultValue = "Terry Pratchett") String entityName)
-			throws MediaWikiApiErrorException {
+	public String retrieveImageUrl(String word) {
 		WikibaseDataFetcher wbdf = WikibaseDataFetcher.getWikidataDataFetcher();
-		// wbdf.getFilter().setLanguageFilter(Collections.singleton("fr"));
-		EntityDocument entity = wbdf.getEntityDocumentByTitle("frwiki", entityName);
+		EntityDocument entity = wbdf.getEntityDocumentByTitle("frwiki", WordUtils.capitalizeFully(word));
+
+		if(entity != null) {
+			System.out.println(String.format("The Qid of %s is %s", word, entity.getEntityId().getId()));
+		} else {
+			System.out.println("No entity found...");
+		}
 
 		if (entity instanceof ItemDocument) {
-			System.out.println(String.format("The Qid of %s is %s", entityName, entity.getEntityId().getId()));
-			System.out.println(
-					"The French label for entity Q8 is " + ((ItemDocument) entity).getLabels().get("fr").getText()
-							+ "\nand its English Wikipedia page has the title "
-							+ ((ItemDocument) entity).getSiteLinks().get("frwiki").getPageTitle() + ".");
+			ItemDocument itemDoc = (ItemDocument) entity;
+			Statement statement = itemDoc.findStatement(Datamodel.makeWikidataPropertyIdValue("P18"));
+			if (statement != null && statement.getValue() != null) {
+				String imageUrl = String.format("The image is http://commons.wikimedia.org/wiki/Special:FilePath/%s", statement.getValue().toString().replace("\"",""));
+				System.out.println(String.format("The image is %s", imageUrl));
+			}
 		}
-		return entity == null ? "No data found" : entity.getEntityId().getId();
-
-		// System.out.println("*** Fetching data for one entity:");
-		// EntityDocument q42 = wbdf.getEntityDocument("Q42");
-		// System.out
-		// .println("The current revision of the data for entity Q42 is "
-		// + q42.getRevisionId());
-		// if (q42 instanceof ItemDocument) {
-		// System.out.println("The English name for entity Q42 is "
-		// + ((ItemDocument) q42).getLabels().get("en").getText());
-		// }
-		//
-		// System.out.println("*** Fetching data for several entities:");
-		// Map<String, EntityDocument> results = wbdf.getEntityDocuments("Q80",
-		// "P31");
-		// // Keys of this map are Qids, but we only use the values here:
-		// for (EntityDocument ed : results.values()) {
-		// System.out.println("Successfully retrieved data for "
-		// + ed.getEntityId().getId());
-		// }
-		//
-		// System.out
-		// .println("*** Fetching data using filters to reduce data volume:");
-		// // Only site links from English Wikipedia:
-		// wbdf.getFilter().setSiteLinkFilter(Collections.singleton("enwiki"));
-		// // Only labels in French:
-		// wbdf.getFilter().setLanguageFilter(Collections.singleton("fr"));
-		// // No statements at all:
-		// wbdf.getFilter().setPropertyFilter(
-		// Collections.<PropertyIdValue> emptySet());
-		// EntityDocument q8 = wbdf.getEntityDocument("Q8");
-		// if (q8 instanceof ItemDocument) {
-		// System.out.println("The French label for entity Q8 is "
-		// + ((ItemDocument) q8).getLabels().get("fr").getText()
-		// + "\nand its English Wikipedia page has the title "
-		// + ((ItemDocument) q8).getSiteLinks().get("enwiki")
-		// .getPageTitle() + ".");
-		// }
-		//
-		// System.out.println("*** Fetching data based on page title:");
-		// EntityDocument edPratchett = wbdf.getEntityDocumentByTitle("enwiki",
-		// "Terry Pratchett");
-		// System.out.println("The Qid of Terry Pratchett is "
-		// + edPratchett.getEntityId().getId());
-		//
-		// System.out.println("*** Fetching data based on several page
-		// titles:");
-		// results = wbdf.getEntityDocumentsByTitle("enwiki", "Wikidata",
-		// "Wikipedia");
-		// // In this case, keys are titles rather than Qids
-		// for (Entry<String, EntityDocument> entry : results.entrySet()) {
-		// System.out
-		// .println("Successfully retrieved data for page entitled \""
-		// + entry.getKey() + "\": "
-		// + entry.getValue().getEntityId().getId());
-		// }
-		//
-		// System.out.println("*** Done.");
+		return null;
 	}
 
-	@Autowired
-	RestTemplate restTemplate;
+	public void retrieveImageForSentence(Sentence sentence) {
+		String imageUrl = retrieveImageUrl(sentence.getSubject());
+		if (imageUrl == null) {
+			imageUrl = retrieveImageUrl(sentence.getPlace());
+			if (imageUrl == null) {
+				imageUrl = retrieveImageUrl(sentence.getComplement());
+				if (imageUrl == null) {
+					imageUrl = retrieveImageUrl(sentence.getVerb());
+				}
+			}
+		}
+		sentence.setImageUrl(imageUrl);
 
-	@CrossOrigin(origins = "*")
-	@RequestMapping("/callFetch2")
-	public void test() {
-        Quote quote = restTemplate.getForObject("http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-        log.info(quote.toString());
-        
-        
-//        restTemplate.get
-        
-    }
+	}
 
 }
