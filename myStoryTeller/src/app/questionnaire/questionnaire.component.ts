@@ -43,6 +43,7 @@ export class QuestionnaireComponent implements OnInit {
       }
       this.reset();
       this.sentences = data;
+      console.log(JSON.stringify(this.sentences));
     });
   }
 
