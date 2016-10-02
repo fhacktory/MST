@@ -1,7 +1,8 @@
 <div>
   <form (ngSubmit)="generate()">
-    <div class="col-md-12">
-      <label *ngFor="let sentence of sentences" class="col-md-12">
+    <div *ngFor="let sentence of sentences" class="col-md-12">
+      <div class="col-md-1"><img src="{{sentence.imageUrl}}" height="25px"></div>
+      <label class="col-md-11">
         <input type="radio" name="options" [value]="sentence.id" [(ngModel)]="model.idSentence">
         {{sentence.generatedSentence}}
         <button (click)="play(sentence.generatedSentence)" type="button"><span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span></button>
