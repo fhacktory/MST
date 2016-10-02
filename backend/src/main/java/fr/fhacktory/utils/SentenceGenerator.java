@@ -45,52 +45,46 @@ public class SentenceGenerator {
 	 * @param sentenceList
 	 */
 	private static Sentence generateOneSentence(StepForm questionnaire) {
-		Sentence sentence = new Sentence();
-		NPPhraseSpec sujet;
-		if (StringUtils.isBlank(questionnaire.getSubject())) {
-			sujet = nlgFactory.createNounPhrase("Cédric");
+		Sentence sentence = new Sentence(questionnaire);
 
-		} else {
-			sujet = nlgFactory.createNounPhrase(questionnaire.getSubject());
-		}
-		NPPhraseSpec complement;
-		if (StringUtils.isBlank(questionnaire.getComplement())) {
-			complement = nlgFactory.createNounPhrase("un", "glace");
+		sentence.setSentence(sentenceToPhrase(sentence));
+		log.debug(sentence.getSentence());
 
-		} else {
-			complement = nlgFactory.createNounPhrase("le", questionnaire.getComplement());
-		}
+		return sentence;
+	}
+
+	/**
+	 * @param sentence
+	 * @return
+	 */
+	private static String sentenceToPhrase(Sentence sentence) {
+		NPPhraseSpec sujet = nlgFactory.createNounPhrase(sentence.getSubject());
+
+		NPPhraseSpec complement = nlgFactory.createNounPhrase("le", sentence.getComplement());
 		// Ajout d'un adjectif au complément
-		String adjectif = AdjectifsGenerator.getAnAdjectif();
-		complement.addModifier(adjectif);
-
-		NPPhraseSpec lieu;
-		if (StringUtils.isBlank(questionnaire.getPlace())) {
-			lieu = nlgFactory.createNounPhrase("le", PlaceGenerator.getPlace());
-
-		} else {
-			lieu = nlgFactory.createNounPhrase("le", questionnaire.getPlace());
+		if (StringUtils.isNotBlank(sentence.getAdjectivComplement())) {
+			complement.addModifier(sentence.getAdjectivComplement());
 		}
-		// Ajout d'un adjectif au complément
-		String adjectifLieu = AdjectifsGenerator.getAnAdjectif();
-		lieu.addModifier(adjectifLieu);
 
-		String verb = StringUtils.isBlank(questionnaire.getVerb()) ? VerbGenerator.getAVerb() : questionnaire.getVerb();
+		// Ajout d'un adjectif au complément
+		NPPhraseSpec place = nlgFactory.createNounPhrase("le", sentence.getPlace());
+		if (StringUtils.isNotBlank(sentence.getAdjectivPlace())) {
+			place.addModifier(sentence.getAdjectivPlace());
+		}
+
+		String verb = sentence.getVerb();
 
 		// PPPhraseSpec complementDuNomMatiere =
 		// nlgFactory.createPrepositionPhrase("en", "pierre");
 		// lieu.addModifier(complementDuNomMatiere);
 
-		PPPhraseSpec dansLieux = nlgFactory.createPrepositionPhrase("dans", lieu);
+		PPPhraseSpec dansLieux = nlgFactory.createPrepositionPhrase("dans", place);
 
 		SPhraseSpec phrase = nlgFactory.createClause(sujet, verb, complement);
 		phrase.setComplement(dansLieux);
 		phrase.setFeature(Feature.TENSE, Tense.PAST);
-
-		sentence.setSentence(realiser.realiseSentence(phrase));
-		log.debug(sentence.getSentence());
-
-		return sentence;
+		String stSentence = realiser.realiseSentence(phrase);
+		return stSentence;
 	}
 
 }
