@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {SentenceGeneratorService} from '../sentence-generator.service';
 import { StepForm } from './StepForm';
 import { Sentence } from './Sentence';
+import {Configuration} from "../app.constant";
 
 @Component({
   selector: 'app-questionnaire',
@@ -16,7 +17,7 @@ export class QuestionnaireComponent implements OnInit {
 
   private rand: number;
 
-  constructor(private sentenceGeneratorService: SentenceGeneratorService) { }
+  constructor(private sentenceGeneratorService: SentenceGeneratorService, private configuration: Configuration) { }
 
   ngOnInit() {
     this.reset();
@@ -57,10 +58,6 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   play(generatedSentence: string) {
-    let msg = new SpeechSynthesisUtterance(generatedSentence);
-    msg.lang = 'fr-FR';
-    let voices = window.speechSynthesis.getVoices();
-    msg.voice = voices.filter(function(voice) { return voice.name === 'Google français'; })[0];
-    window.speechSynthesis.speak(msg);
+    this.configuration.speak(generatedSentence);
   }
 }
