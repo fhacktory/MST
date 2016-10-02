@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import fr.fhacktory.utils.NameGenerator;
 import fr.fhacktory.utils.PlaceGenerator;
@@ -22,15 +24,16 @@ public class Story implements Serializable {
 	@GeneratedValue
 	private Integer id;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Sentence> sentences = new ArrayList<>();
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<StoryCharacter> characters = new ArrayList<>();
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<StoryPlace> places = new ArrayList<>();
 
+	@Transient
 	public String getRandomCharacter() {
 		String stCharacter = null;
 		while (characters.iterator().hasNext() && stCharacter == null) {
@@ -46,6 +49,7 @@ public class Story implements Serializable {
 		return stCharacter;
 	}
 
+	@Transient
 	public String getRandomPlace() {
 		String stPlace = null;
 		while (places.iterator().hasNext() && stPlace == null) {

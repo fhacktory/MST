@@ -22,4 +22,7 @@ public class StoryPlace implements Serializable {
 	public StoryPlace(String stPlace) {
 		name = stPlace;
 	}
+
+	public StoryPlace() {
+	}
 }

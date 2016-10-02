@@ -46,11 +46,15 @@ public class SentenceControler {
 	public List<Sentence> finishStory(@RequestBody StepForm questionnaire) {
 		return handdleFormSubmit(questionnaire);
 	}
-	
 
+	/**
+	 * Suppression de l'histoire en cours
+	 *
+	 * @param questionnaire
+	 * @return
+	 */
 	@RequestMapping("/resetStory")
-	public int resetStory(@RequestBody StepForm questionnaire) {
-		// Suppression de l'histoire en cours
+	public int resetStory() {
 		resetCurrentStory();
 		return 200;
 	}
@@ -61,7 +65,9 @@ public class SentenceControler {
 
 		// Ajout de la phrase choisie par l'utilisateur à l'histoire
 		Sentence selectedSentence = sentenceRepository.findOne(questionnaire.getIdSentence());
-		currentStory.getSentences().add(selectedSentence);
+		if (selectedSentence != null) {
+			currentStory.getSentences().add(selectedSentence);
+		}
 
 		List<Sentence> sentenceList;
 		if (questionnaire.getActionType() == 3) {
@@ -85,14 +91,14 @@ public class SentenceControler {
 		storyRepository.findAll().forEach(stories::add);
 		Story story;
 		if (stories.isEmpty()) {
-			story = new Story();			
+			story = new Story();
 			storyRepository.save(story);
 		} else {
 			story = stories.get(0);
 		}
 		return story;
 	}
-	
+
 	/**
 	 * Suppression de l'histoire en cours
 	 */
@@ -100,8 +106,8 @@ public class SentenceControler {
 		List<Story> stories = new ArrayList<>();
 		storyRepository.findAll().forEach(stories::add);
 		if (!stories.isEmpty()) {
-		 storyRepository.delete(stories.get(0));
-		} 		
+			storyRepository.delete(stories.get(0));
+		}
 	}
 
 }
