@@ -3,8 +3,6 @@ package fr.fhacktory.mst;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.fhacktory.model.Story;
-import fr.fhacktory.model.repository.StoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.fhacktory.model.Sentence;
 import fr.fhacktory.model.StepForm;
+import fr.fhacktory.model.Story;
 import fr.fhacktory.model.repository.SentenceRepository;
+import fr.fhacktory.model.repository.StoryRepository;
 import fr.fhacktory.utils.SentenceGenerator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +46,14 @@ public class SentenceControler {
 	public List<Sentence> finishStory(@RequestBody StepForm questionnaire) {
 		return handdleFormSubmit(questionnaire);
 	}
+	
+
+	@RequestMapping("/resetStory")
+	public int resetStory(@RequestBody StepForm questionnaire) {
+		// Suppression de l'histoire en cours
+		resetCurrentStory();
+		return 200;
+	}
 
 	private List<Sentence> handdleFormSubmit(StepForm questionnaire) {
 		// Récupération de l'histoire en cours
@@ -75,12 +83,23 @@ public class SentenceControler {
 		storyRepository.findAll().forEach(stories::add);
 		Story story;
 		if (stories.isEmpty()) {
-			story = new Story();
+			story = new Story();			
 			storyRepository.save(story);
 		} else {
 			story = stories.get(0);
 		}
 		return story;
+	}
+	
+	/**
+	 * Suppression de l'histoire en cours
+	 */
+	private void resetCurrentStory() {
+		List<Story> stories = new ArrayList<>();
+		storyRepository.findAll().forEach(stories::add);
+		if (!stories.isEmpty()) {
+		 storyRepository.delete(stories.get(0));
+		} 		
 	}
 
 }
