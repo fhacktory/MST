@@ -1,15 +1,14 @@
 package fr.fhacktory.utils;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class AdjectifsGeneratorTest {
 
-    AdjectifsGenerator adjectifsGenerator = new AdjectifsGenerator();
-
-    @Test
-    public void testGetAnAdjectif() throws Exception {
-	assertThat(adjectifsGenerator.getAnAdjectif()).isNotEmpty();
-    }
+	@Test
+	public void testGetAnAdjectif() throws Exception {
+		assertThat(AdjectifsGenerator.getAnAdjectif()).isNotEmpty();
+	}
 
 }
